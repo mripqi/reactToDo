@@ -1,26 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Table} from 'reactstrap'
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component {
+  state = {
+    input: []
+  }
+
+  componentDidMount() {
+    axios.get(`https://btm-rn.herokuapp.com/api/v1/users/`)
+      .then(res => {
+        const input = res.data.results;
+        this.setState({ input });
+      })
+  }
+
+  render() {
+    return (
+
+    <Table dark>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">{ this.state.input.map(val => <p>${val._id}</p>)}</th>
+              <td>{ this.state.input.map(val => <p>{val.name}</p>)}</td>
+              <td>{ this.state.input.map(val => (val.age) ? <p>{val.age}</p> : <p>-</p>)}</td>
+            </tr>
+          </tbody>
+        </Table>
+    )
+  }
 }
-
-export default App;
